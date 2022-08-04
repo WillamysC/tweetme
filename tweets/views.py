@@ -1,7 +1,4 @@
-import imp
-from os import stat
-from sys import exec_prefix
-from tkinter.messagebox import RETRY
+import random
 from django.shortcuts import render
 from django.http import HttpResponse, Http404, JsonResponse
 
@@ -17,7 +14,7 @@ def tweet_list_view(request, *args, **kwargs):
     REST API VIEW
     """
     qs = Tweet.objects.all()
-    tweet_list = [{'id': x.id, 'content':x.content} for x in qs]
+    tweet_list = [{'id': x.id, 'content':x.content, 'likes': random.randint(0, 1010)} for x in qs]
     data = {
         'isUser': False,
         'response': tweet_list
