@@ -16,7 +16,7 @@
             <form class="form" id="tweet-create-form" action="/create-tweet" method="POST">
                 {% csrf_token %}    
                 <input type="hidden" name="next" value="/">
-                <textarea class="form-control" name="content" placeholder="Your tweet.."></textarea>
+                <textarea required="required" class="form-control" name="content" placeholder="Your tweet.."></textarea>
                 <button class="btn btn-primary" type="submit">Tweet</button>
             </form>
         </div>
@@ -43,12 +43,20 @@
             xhr.onload = function() {
                 if (xhr.status == 201) {
                 const newTweetJson = xhr.response
-                // const newTweetJson = JSON.parse(newTweet)
                 const newTweetElement = formatTweetElement(newTweetJson)
-                console.log(newTweetElement)
-                tweetsContainerElement.prepend(newTweetElement)               
+                const ogHtml = tweetsContainerElement.innerHTML
+                tweetsContainerElement.innerHTML = newTweetElement + ogHtml
+                myForm.reset()            
+                } else if (xhr.status === 400) {
+                    const errorJson = xhr.response
+                    console.log(errorJson)
+                } else if (xhr.status === 500) {
+                    alert("There ere a server error, please try again.")
                 }
 
+            }
+            xhr.onerror = function() {
+                alert("An error occurred. Please try again later.")
             }
             xhr.send(myFormData)
 
