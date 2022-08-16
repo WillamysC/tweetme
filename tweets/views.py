@@ -14,14 +14,23 @@ def home_view(request, *args, **kwargs):
     return render(request, 'pages/home.html', context={}, status=200)
 
 def tweet_create_view(request, *args, **kwargs):
+    user = request.user
+    if not request.user.is_authenticated:
+        user = None
+        if request.accepts("application/json"):
+            return JsonResponse({}, status=401)
+        return redirect(settings.LOGIN_URL)
+
     # print('ajax', request.accepts('text/html'))
     # is_ajax = request.headers.get('x-requested-with') == 'XMLHttpRequest'
     # print('ajax', is_ajax)
+    
     form = TweetForm(request.POST or None)
     next_url = request.POST.get('next') or None
 
     if form.is_valid():
         obj = form.save(commit=False)
+        obj.user = user
         obj.save()
         if request.accepts("application/json"):
             return JsonResponse(obj.serialize(), status=201) # 201 == create items
