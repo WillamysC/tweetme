@@ -9,5 +9,6 @@ urlpatterns = [
     path('tweets', views.tweet_list_view, name='tweet-list'),
     path('tweets/<int:tweet_id>', views.tweet_detail_view, name='tweet-details'),
     path('api/tweets/<int:tweet_id>/delete', views.tweet_delete_view, name='tweet-delete'),
+    path('api/tweets/action', views.tweet_action_view, name='tweet-action'),
 
 ]
