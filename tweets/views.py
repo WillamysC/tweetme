@@ -16,7 +16,10 @@ from .serializers import TweetSerializer, TweetActionSerializer, TweetCreateSeri
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
 def home_view(request, *args, **kwargs):
-    return render(request, 'pages/home.html', context={}, status=200)
+    username = None
+    if request.user.is_authenticated:
+        username = request.user.username
+    return render(request, 'pages/home.html', context={"username": username}, status=200)
 
 @api_view(['POST'])
 # @authentication_classes([SessionAuthentication])
